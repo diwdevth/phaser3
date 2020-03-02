@@ -39,8 +39,9 @@ var ufoBulletGrp;
 var playerHeart = 3;
 var heartGrp;
 
-var running = true;
+var running;
 function preload(){
+    running = true;
     //console.log("preload");
     scene = this;
     scene.load.image('player', './asset/image/DiwdoW3539.png');
@@ -91,13 +92,15 @@ function createUFO(){
         ufo.y = ufo.starty;
         ufo.magnitude = Math.random() * 60;
         ufo.fireInterval = (Math.random() * 3000) + 1500;
-        ufo.fireTime = scene.time.addEvent({
-            delay: ufo.fireInterval,
-            args: [ufo],
-            callback: ufoFire,
-            repeat: -1
-        });
-
+        if(running == true){
+            ufo.fireTime = scene.time.addEvent({
+                delay: ufo.fireInterval,
+                args: [ufo],
+                callback: ufoFire,
+                repeat: -1
+            });
+        }
+            
         ufoGrp.add(ufo);
     }
 }
@@ -231,11 +234,13 @@ function updateExplosion(){
 
 
 function ufoFire(enemy){
-    var bullet = scene.physics.add.sprite(enemy.x, enemy.y, 'ufo_bullet');
-    bullet.setScale(0.5);
-    bullet.body.velocity.x = -bulletSpeed;
+    if(running == true){
+        var bullet = scene.physics.add.sprite(enemy.x, enemy.y, 'ufo_bullet');
+        bullet.setScale(0.5);
+        bullet.body.velocity.x = -bulletSpeed;
 
-    ufoBulletGrp.add(bullet);
+        ufoBulletGrp.add(bullet);
+    }
 
 }
 function onPlayerHIT(player, obstacle){
